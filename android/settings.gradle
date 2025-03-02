@@ -1,0 +1,30 @@
+pluginManagement {
+    def flutterSdkPath = {
+        def properties = new Properties()
+        file("local.properties").withInputStream { properties.load(it) }
+        def flutterSdkPath = properties.getProperty("flutter.sdk")
+        assert flutterSdkPath != null, "flutter.sdk not set in local.properties"
+        return flutterSdkPath
+    }()
+
+    includeBuild("$flutterSdkPath/packages/flutter_tools/gradle")
+
+    repositories {
+        google()
+        mavenCentral()
+        gradlePluginPortal()
+        // Agregamos el repositorio EAP para las versiones en desarrollo de Kotlin
+        maven { url 'https://maven.pkg.jetbrains.space/kotlin/p/kotlin/eap' }
+        // Opcional: repositorio de snapshots, en caso de necesitar versiones más recientes
+        // maven { url 'https://maven.pkg.jetbrains.space/kotlin/p/kotlin/snapshots' }
+    }
+}
+
+plugins {
+    id "dev.flutter.flutter-plugin-loader" version "1.0.0"
+    id "com.android.application" version "8.8.0" apply false
+    // Se actualiza a la versión 2.0.0, que produce metadata 2.1.0 y está disponible en los repositorios
+    id "org.jetbrains.kotlin.android" version "2.0.0" apply false
+}
+
+include ":app"
